@@ -60,15 +60,15 @@ end
 
 
 %% train BNT 
-engine=jtree_inf_engine(bnet); 
-[bnet2,LLtrace]=learn_params_em(engine,samples,max_iter,epsilon);
+% engine=jtree_inf_engine(bnet); 
+% [bnet2,LLtrace]=learn_params_em(engine,samples,max_iter,epsilon);
 
 
 
  
 % save('bnet2.mat','bent2');
-% bnet2=load('bnet2.mat'); 
-% bnet2=bnet2.bnet2; 
+bnet2=load('bnet2.mat'); 
+bnet2=bnet2.bnet2; 
 
 %% Inferene 
 engine = jtree_inf_engine(bnet2); 
@@ -81,15 +81,34 @@ for i=1:number
     [engine,ll]=enter_evidence(engine,evidence); 
     marg=marginal_nodes(engine,C);
     %mpe=find_mpe(engine,evidence);
-    Y_pred(i)=marg.mu;
-    Y_eval(i)=Y_train(i);
+    Y_pred_train(i)=marg.mu;
+    Y_eval_train(i)=Y_train(i);
+    
 end 
+
+for i=1:data_num-number
+    evidence{A}=[test_data(i,1:9)'];
+%     evidence{A}=[test_data(i,1:9)'];
+    [engine,ll]=enter_evidence(engine,evidence); 
+    marg=marginal_nodes(engine,C);
+    %mpe=find_mpe(engine,evidence);
+    Y_pred_test(i)=marg.mu;
+    Y_eval_test(i)=Y_test(i);
+    
+end 
+
 
 
 %%%% plot %%%%
 figure (1) 
-plot(1:number,Y_eval); 
+plot(1:number,Y_eval_train); 
 hold on; 
-plot(1:number,Y_pred);
+plot(1:number,Y_pred_train);
 
+
+
+figure (2) 
+plot(1:data_num-number,Y_eval_test); 
+hold on; 
+plot(1:data_num-number,Y_pred_test);
 
