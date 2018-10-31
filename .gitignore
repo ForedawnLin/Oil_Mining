@@ -6,3 +6,5 @@ bnet2.mat
 MiningProcess_Flotation_Plant_Database.csv
 *.mat
 *.csv
+
+EOMHierarchical_one_input/*.mat
