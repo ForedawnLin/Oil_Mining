@@ -28,25 +28,32 @@ n_sample=number; %%% BNT sample number
 
 
 %%% create BN %%%
-A=1;B=2;C=3; 
-n_node=3; 
+A=1;  %%% input 
+B=2;D=4; %%% hidden units 
+C=3;  %%% output 
+
+n_node=4; 
 ns=ones(1,n_node); 
 ns(A)=9; 
-ns(B)=8; 
+ns(B)=8;
+ns(D)=6;
+
 
 dag=zeros(n_node); 
-dag(A,B)=1; 
-dag(A,C)=1;
-dag(B,C)=1; 
+dag(A,[B C D])=1; 
+dag(B,[C D])=1;
+dag(D,C)=1; 
 
-bnet=mk_bnet(dag,ns,'discrete',[B],'observed',[A C]); 
+
+bnet=mk_bnet(dag,ns,'discrete',[B D],'observed',[A C]); 
 seed=0; 
 rand('state',seed); 
 
 bnet.CPD{A}=gaussian_CPD(bnet,A,'cov_type','diag');
 bnet.CPD{B}=softmax_CPD(bnet,B,'clamped',0, 'max_iter', 10);
 %bnet.CPD{C}=gaussian_CPD(bnet,C,'mean',[0 0 0],'cov','diag');  
-bnet.CPD{C}=gaussian_CPD(bnet,C,'mean',[0 0 0],'cov_type','diag');
+bnet.CPD{C}=gaussian_CPD(bnet,C,'cov_type','diag');
+bnet.CPD{D}=softmax_CPD(bnet,D,'clamped',0, 'max_iter', 10);
 
 
 
@@ -60,15 +67,15 @@ end
 
 
 %% train BNT 
-% engine=jtree_inf_engine(bnet); 
-% [bnet2,LLtrace]=learn_params_em(engine,samples,max_iter,epsilon);
+engine=jtree_inf_engine(bnet); 
+[bnet2,LLtrace]=learn_params_em(engine,samples,max_iter,epsilon);
 
 
 
  
 % save('bnet2.mat','bent2');
-bnet2=load('bnet2.mat'); 
-bnet2=bnet2.bnet2; 
+% bnet2=load('bnet2.mat'); 
+% bnet2=bnet2.bnet2; 
 
 %% Inferene 
 engine = jtree_inf_engine(bnet2); 

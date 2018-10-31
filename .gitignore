@@ -7,3 +7,5 @@ MiningProcess_Flotation_Plant_Database.csv
 MiningProcess_Flotation_Plant_Database_orig.csv
 *.mat
 *.csv
+
+EOMHierarchical_one_input/*.mat
