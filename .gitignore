@@ -4,6 +4,7 @@ filtered_Y.mat
 filtered_matrix.mat
 bnet2.mat
 MiningProcess_Flotation_Plant_Database.csv
+MiningProcess_Flotation_Plant_Database_orig.csv
 *.mat
 *.csv
 
