@@ -1,7 +1,7 @@
 clc
 clear all
 
-
+%%%% get training data %%%%
 FILE=load('data/train_data_processed.mat');
 train_data=FILE.train_processed;
 Y_train=train_data.Y;
@@ -9,7 +9,7 @@ train_feature=train_data.feature;
 train_feature=train_feature/100; 
 
 
-
+%%% get testing data %%%%
 FILE2=load('data/test_data.mat');
 test_data=FILE2.test_data; 
 Y_test=test_data(:,end);
