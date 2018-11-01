@@ -41,8 +41,8 @@ C=3;  %%% output
 n_node=4; 
 ns=ones(1,n_node); 
 ns(A)=input_dim; 
-ns(B)=8; %%% hidden state num 
-ns(D)=8; %%% hidden state num
+ns(B)=10; %%% hidden state num 
+ns(D)=6; %%% hidden state num
 
 
 dag=zeros(n_node); 
@@ -79,7 +79,7 @@ engine=jtree_inf_engine(bnet);
 
 
  
-% save('bnet2.mat','bent2');
+% save('EOMHierarchical_one_input/bnet2_B8_D8.mat','bnet2');
 % bnet2=load('bnet2.mat'); 
 % bnet2=bnet2.bnet2; 
 
@@ -107,7 +107,6 @@ for i=1:n_sample_test
     %mpe=find_mpe(engine,evidence);
     Y_pred_test(i)=marg.mu;
     Y_eval_test(i)=Y_test(i);
-    
 end 
 
 
