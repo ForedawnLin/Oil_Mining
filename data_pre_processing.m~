@@ -40,8 +40,7 @@ features_goodPCed=features_PCed(:,good_PCs_ind); %%% n*Num_goodPCsFeatures
 
 
 %good_feature_num=sig_features_ind(good_PCs_ind); %%% final selected feature
-selected_feature_mean=feature_mean(sig_features_ind); %%% mean of the seleced features (by correlation matrix)  
-selected_feature_std=feature_std(sig_features_ind);
+selected_feature_mean=feature_mean; %%% mean of the seleced features (by correlation matrix)  
 selected_train_data=features_goodPCed; %%% 
 
 
@@ -49,12 +48,11 @@ selected_train_data=features_goodPCed; %%%
 train_processed=struct; 
 train_processed.description="features filtered by correlation + PCA (substracted mean), Y unfiltered";
 train_processed.feature_num=sig_features_ind; 
-train_processed.feature_mean=selected_feature_mean;
-train_processed.feature_std=selected_feature_std;
+train_processed.feature_mean=selected_feature_mean; 
 train_processed.feature=selected_train_data;
 train_processed.Y=Y;
 train_processed.PCs=V(:,good_PCs_ind); %%% selected basis 
-save('data/train_data_processed_std','train_processed'); 
+save('data/train_data_processed','train_processed'); 
 
 
 

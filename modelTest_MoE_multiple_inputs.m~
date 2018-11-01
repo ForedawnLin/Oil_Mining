@@ -38,14 +38,13 @@ A=1;B=2;C=3;D=4;E=5;F=6;G=7;H=8;  %%% input
 I=9; K=10%%% hidden units 
 J=11; %%% output 
 
-n_node=11; 
+n_node=10; 
 ns=ones(1,n_node); 
 ns(I)=3; %%% hidden state num
 
 
 dag=zeros(n_node); 
-dag([A B C D E F G H],K)=1;
-dag(K,I)=1; 
+dag([A B C D E F G H],I)=1; 
 dag([A B C D E F G H],J)=1;
 dag(I,J)=1; 
 
@@ -67,7 +66,7 @@ bnet.CPD{H}=root_CPD(bnet,H);
 
 
 bnet.CPD{I}=softmax_CPD(bnet,I,'clamped',0, 'max_iter', 10);
-bnet.CPD{K}=gaussian_CPD(bnet,K);  
+%bnet.CPD{C}=gaussian_CPD(bnet,C,'mean',[0 0 0],'cov','diag');  
 bnet.CPD{J}=gaussian_CPD(bnet,J,'mean',[0 0 0],'cov_type','diag');
 
 
