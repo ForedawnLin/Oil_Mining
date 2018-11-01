@@ -31,6 +31,7 @@ n_sample_test=test_data_SIZE(1);
 %%% training settings 
 T=2;  %%% look back step 
 max_iter=1000; %%% max iter to train 
+thresh_em=0.001; %%% EM threshold
 
 
 %%% I/O HMM structure %%% 
@@ -93,12 +94,12 @@ end
 %engine = hmm_inf_engine(bnet,T);
 
 engine=smoother_engine(jtree_2TBN_inf_engine(bnet));
-[bnet2,LLtrace]=learn_params_dbn_em(engine,cases,'max_iter',max_iter,'thresh',0.001); 
+[bnet2,LLtrace]=learn_params_dbn_em(engine,cases,'max_iter',max_iter,'thresh',thresh_em); 
 
 % 
 % FILE=load('dbn_test.mat'); 
 % bnet2=FILE.bnet2;
-% save('I_O_HMM_one_input/I_O_HMM_T5_B4','bnet2');
+% save('I_O_HMM_one_input/I_O_HMM_T2_B4','bnet2');
 % 
 
 infer_train_Y=cell(1,T); %%% initialize train target val for inference
@@ -111,7 +112,7 @@ for i=1:n_sample_train-T
     evidence(3,:)=infer_train_Y(1,:);
     [engine,ll]=enter_evidence(engine,evidence);
 %%% inference %%%
-    marg=marginal_nodes(engine,2,5); %%% node_num, time slice 
+    marg=marginal_nodes(engine,B,T); %%% node_num, time slice 
     
     
 %%%%%%%% prediction %%%%%%%%% 
@@ -167,7 +168,7 @@ for i=1:n_sample_test-T
     evidence(3,:)=infer_test_Y;
     [engine,ll]=enter_evidence(engine,evidence);
   %%% inference %%%
-    marg=marginal_nodes(engine,2,5); %%% node_num, time slice 
+    marg=marginal_nodes(engine,B,T); %%% node_num, time slice 
   
     
     
