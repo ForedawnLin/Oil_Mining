@@ -128,7 +128,7 @@ for nT=2:5  %%% grid search for time step
         %engine = hmm_inf_engine(bnet,T);
 
         engine=smoother_engine(jtree_2TBN_inf_engine(bnet));
-        %[bnet2,LLtrace]=learn_params_dbn_em(engine,cases,'max_iter',max_iter,'thresh',thresh_em); 
+        [bnet2,LLtrace]=learn_params_dbn_em(engine,cases,'max_iter',max_iter,'thresh',thresh_em); 
 
 
         % FILE=load('I_O_HMM_one_input/I_O_HMM_T2_B3.mat'); 
@@ -229,8 +229,12 @@ for nT=2:5  %%% grid search for time step
             infer_test_Y(1)=[];
             infer_test_Y{T}=predicted_val_test; %%% output output value as previously observed output    
         end 
-        
-    save('I_O_HMM_one_input/I_O_HMM_T2_B4','bnet2');
+        p1='I_O_HMM_one_input/I_O_HMM_T';
+        p2=num2str(nT);
+        p3='_B';
+        p4=num2str(nB);
+        p5='_STD.mat'; 
+        save([p1 p2 p3 p4 p5],'bnet2');
     end 
 end 
 
