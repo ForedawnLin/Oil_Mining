@@ -74,8 +74,8 @@ C=3;  %%% output
 n_node=4; 
 ns=ones(1,n_node); 
 ns(A)=input_dim; 
-ns(B)=8; %%% hidden state num 
-ns(D)=8; %%% hidden state num
+ns(B)=6; %%% hidden state num 
+ns(D)=6; %%% hidden state num
 
 
 dag=zeros(n_node); 
@@ -117,7 +117,7 @@ engine=jtree_inf_engine(bnet);
 % bnet2=bnet2.bnet2; 
 
 %% Inferene 
-engine = jtree_inf_engine(bnet2); 
+engine = jtree_inf_engine(bnet2); samples
 evidence=cell(1,n_node);
 % n_test_sample=1000;
 % x2=rand(1,n_test_sample)*20;
