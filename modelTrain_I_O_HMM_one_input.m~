@@ -233,7 +233,7 @@ for nT=2:2  %%% grid search for time step
         p2=num2str(nT);
         p3='_B';
         p4=num2str(nB);
-        p5='_STD_PCAfirst.mat'; 
+        p5='_STD.mat'; 
         save([p1 p2 p3 p4 p5],'bnet2');
     end 
 end 
