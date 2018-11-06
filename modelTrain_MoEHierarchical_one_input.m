@@ -79,9 +79,8 @@ ns(A)=input_dim;
 n_B=[2:10]; 
 n_D=[2:10]; 
 
-for nB=2:10
-    for nD=2:10 
-
+for nB=2:6
+    for nD=2:6
         ns(B)=nB; %%% hidden state num 
         ns(D)=nD; %%% hidden state num
 
@@ -121,8 +120,8 @@ for nB=2:10
 
 
         % save('EOMHierarchical_one_input/bnet2_B2_D4_STD.mat','bnet2');
-        % bnet2=load('EOMHierarchical_one_input/bnet2_B10_D6.mat'); 
-        % bnet2=bnet2.bnet2; 
+%         bnet2=load('EOMHierarchical_one_input/bnet2_B4_D4_STD.mat'); 
+%         bnet2=bnet2.bnet2; 
 
         %% Inferene 
         engine = jtree_inf_engine(bnet2); 
@@ -156,21 +155,43 @@ for nB=2:10
         p4=num2str(nD);
         p5='_STD.mat'; 
         save([p1 p2 p3 p4 p5],'bnet2')
-        
     end
 end 
+
+MAE_train=sum(abs(Y_eval_train-Y_pred_train))/length(Y_eval_train)
+MAE_test=sum(abs(Y_pred_test-Y_eval_test))/length(Y_eval_test)
+max_test=max(Y_eval_test)
+min_test=min(Y_eval_test)
+range_test=max_test-min_test
 
 
 %%%% plot %%%%
 figure (1) 
-plot(1:n_sample_train,Y_eval_train); 
+plot(1:n_sample_train,Y_eval_train,'b'); 
 hold on; 
-plot(1:n_sample_train,Y_pred_train);
-
+plot(1:n_sample_train,Y_pred_train,'r');
+title('Ground truth and predction (training data)'); 
+xlabel('time sequence'); 
+ylabel('value'); 
+legend('Ground truth','Prediction ')
 
 
 figure (2) 
-plot(1:n_sample_test,Y_eval_test); 
+plot(1:n_sample_test,Y_eval_test,'b'); 
 hold on; 
-plot(1:n_sample_test,Y_pred_test);
+plot(1:n_sample_test,Y_pred_test,'r');
+title('Ground truth and predction (test data)'); 
+xlabel('time sequence'); 
+ylabel('value'); 
+legend('Ground truth','Prediction ')
 
+
+
+figure (3) 
+plot(Y_pred_test,Y_eval_test,'bo'); 
+hold on;
+plot(-1:6,-1:6,'r');
+title('Ground truth v.s predction (test data)'); 
+xlabel('prediction'); 
+ylabel('ground truth'); 
+legend('Ground truth v.s prediction','optimal prediction')
