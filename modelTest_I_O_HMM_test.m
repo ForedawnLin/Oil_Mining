@@ -59,8 +59,8 @@ input_dim=train_data_SIZE(2);
 test_data_SIZE=size(test_feature); 
 n_sample_test=test_data_SIZE(1); 
 
-for nT=2:5  %%% grid search for time step 
-    for nB=2:10 %%% grid search for hidden state choices 
+for nT=4:5  %%% grid search for time step 
+    for nB=2:5 %%% grid search for hidden state choices 
 
         %%% training settings 
         T=nT;  %%% look back step 
