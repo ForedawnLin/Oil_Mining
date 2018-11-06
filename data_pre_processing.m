@@ -54,7 +54,7 @@ train_processed.feature_std=selected_feature_std;
 train_processed.feature=selected_train_data;
 train_processed.Y=Y;
 train_processed.PCs=V(:,good_PCs_ind); %%% selected basis 
-save('data/train_data_processed_std','train_processed'); 
+%save('data/train_data_processed_std','train_processed'); 
 
 
 
