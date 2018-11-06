@@ -5,9 +5,10 @@ clear all
 File=load('data/train_data.mat'); 
 train_data=File.train_data;
 
-feature_mean=mean(train_data(:,1:end-1));
-feature_std=std(train_data(:,1:end-1));
-train_data(:,1:end-1)=(train_data(:,1:end-1)-feature_mean)./(feature_std);
+% feature_mean=mean(train_data(:,1:end-1));
+% feature_std=std(train_data(:,1:end-1));
+% train_data(:,1:end-1)=(train_data(:,1:end-1)-feature_mean)./(feature_std);
+
 
 %%%% find correlation between input features and %Silica 
 covariance=cov(train_data);
@@ -34,7 +35,7 @@ features_PCed=good_features_centered*V; %%% n*Num_features
 %%% not std 
 %singular_th=0.1*10^4;  %%% set singular value threshold (PC component signidicance); 
 %%% std 
-singular_th=41;  %%% set singular value threshold (PC component signidicance); 
+singular_th=0.01*10^5;  %%% set singular value threshold (PC component signidicance); 
 good_PCs_ind=find(max(S)>singular_th); 
 features_goodPCed=features_PCed(:,good_PCs_ind); %%% n*Num_goodPCsFeatures  
 
