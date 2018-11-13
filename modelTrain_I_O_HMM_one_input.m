@@ -1,12 +1,67 @@
 clc 
 clear all 
 
+%%%% data pre process %%%%
+File=load('data/train_data.mat'); 
+train_data=File.train_data;
+
+feature_mean=mean(train_data(:,1:end-1));
+feature_std=std(train_data(:,1:end-1));
+train_data(:,1:end-1)=(train_data(:,1:end-1)-feature_mean)./(feature_std);
 
 
+%%%% find correlation between input features and %Silica 
+covariance=cov(train_data);
+[R,p]=corrcoef(train_data);
+p_th=1; 
+[sig_features_ind,~]=find(p(:,23)<p_th); %%% find significantly correlated input features w.r.t output (23th coln)  
+good_features=train_data(:,sig_features_ind); %%% Good features
+Y=train_data(:,23); % Silica 
+
+%%% PCA calcualtion to get rid of correlation btw inputs %%% 
+feature_SIZE=size(good_features); 
+data_number=feature_SIZE(1);
+ 
+%%% when not std training set 
+%feature_mean=mean(good_features);
+%good_features_centered=good_features-feature_mean; 
+%%% when std training set 
+good_features_centered=good_features;
+
+%covariance_matrix=good_features_centered'*good_features_centered/(data_numner-1); 
+[U,S,V]=svd(good_features_centered);
+features_PCed=good_features_centered*V; %%% n*Num_features
+
+%%% not std 
+%singular_th=0.1*10^4;  %%% set singular value threshold (PC component signidicance); 
+%%% std 
+singular_th=60;  %%% set singular value threshold (PC component signidicance); 
+for nPC=1:22
+good_PCs_ind=[1:nPC];%find(max(S)>singular_th); 
+features_goodPCed=features_PCed(:,good_PCs_ind); %%% n*Num_goodPCsFeatures  
 
 
+%good_feature_num=sig_features_ind(good_PCs_ind); %%% final selected feature
+selected_feature_mean=feature_mean(sig_features_ind); %%% mean of the seleced features (by correlation matrix)  
+selected_feature_std=feature_std(sig_features_ind);
+selected_train_data=features_goodPCed; %%% 
 
-std_test_data=2; %%% if 1 use standlized data before PCA, 2 std data after PCA  
+
+%%% save data 
+train_processed=struct; 
+train_processed.description="features filtered by correlation + PCA (substracted mean), Y unfiltered";
+train_processed.feature_num=sig_features_ind; 
+train_processed.feature_mean=selected_feature_mean;
+train_processed.feature_std=selected_feature_std;
+train_processed.feature=selected_train_data;
+train_processed.Y=Y;
+train_processed.PCs=V(:,good_PCs_ind); %%% selected basis 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+
+
+std_test_data=1; %%% if 1 use standlized data before PCA, 2 std data after PCA  
 
 
 if std_test_data==0
@@ -33,8 +88,8 @@ if std_test_data==0
 elseif std_test_data==1 
     
     %%%% get std training data %%%%
-    FILE=load('data/train_data_processed_std.mat');
-    train_data=FILE.train_processed;
+    %FILE=load('data/train_data_processed_std.mat');
+    train_data=train_processed;%FILE.train_processed;
     Y_train=train_data.Y;
     train_feature=train_data.feature;
 
@@ -52,10 +107,11 @@ elseif std_test_data==1
  else     
     
     %%%% get std training data %%%%
-    FILE=load('data/train_data_processed_PCA_before_std.mat');
-    train_data=FILE.train_processed;
+    %FILE=load('data/train_data_processed_PCA_before_std.mat');
+    train_data=train_processed;%FILE.train_processed;
     Y_train=train_data.Y;
     train_feature=train_data.feature;
+    
 
 
 
@@ -68,6 +124,8 @@ elseif std_test_data==1
     %%% Apply basis (PCA) and std on test_feature
     test_feature_PCed=test_data(:,train_data.feature_num)*train_data.PCs; %%% apply PCA basis      
     test_feature=(test_feature_PCed-train_data.feature_mean)./train_data.feature_std;  %%% get selected features and std train data mean        
+    test_feature=test_feature(:,1:end);
+    train_feature=train_feature(:,1:end);
 end 
 
 
@@ -83,13 +141,13 @@ input_dim=train_data_SIZE(2);
 test_data_SIZE=size(test_feature); 
 n_sample_test=test_data_SIZE(1); 
 
-for nT=2:2  %%% grid search for time step 
+for nT=3:3  %%% grid search for time step 
     for nB=4:4 %%% grid search for hidden state choices 
 
         %%% training settings 
         T=nT;  %%% look back step 
         max_iter=1000; %%% max iter to train 
-        thresh_em=0.0000001; %%% EM threshold
+        thresh_em=0.01; %%% EM threshold
 
 
         %%% I/O HMM structure %%% 
@@ -253,16 +311,19 @@ for nT=2:2  %%% grid search for time step
             infer_test_Y(1)=[];
             infer_test_Y{T}=predicted_val_test; %%% output output value as previously observed output    
         end 
-        p1='I_O_HMM_one_input/I_O_HMM_T';
-        p2=num2str(nT);
-        p3='_B';
-        p4=num2str(nB);
-        p5='_STD_PCAfirst.mat'; 
-        save([p1 p2 p3 p4 p5],'bnet2');
+%         p1='I_O_HMM_one_input/I_O_HMM_T';
+%         p2=num2str(nT);
+%         p3='_B';
+%         p4=num2str(nB);
+%         p5='_STD_PCAfirst.mat'; 
+%         save([p1 p2 p3 p4 p5],'bnet2');
     end 
 end 
 
+nPC
+MAE_test=sum(abs(Y_test(T+1:end)'-predicted_val_test_set))/length(Y_test(T+1:end))
 
+end 
 
 %%%% plot %%%%
 figure (3)
