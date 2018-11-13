@@ -6,7 +6,7 @@ clear all
 
 
 
-std_test_data=2; %%% if 1 use standlized data before PCA, 2 std data after PCA  
+std_test_data=1; %%% if 1 use standlized data before PCA, 2 std data after PCA  
 
 
 if std_test_data==0
@@ -49,7 +49,7 @@ elseif std_test_data==1
     test_feature=(test_data(:,train_data.feature_num)-train_data.feature_mean)./train_data.feature_std;  %%% get selected features and std train data mean 
     test_feature=test_feature*train_data.PCs; %%% apply PCA basis
        
- else     
+else     
     
     %%%% get std training data %%%%
     FILE=load('data/train_data_processed_PCA_before_std.mat');
@@ -83,7 +83,7 @@ input_dim=train_data_SIZE(2);
 test_data_SIZE=size(test_feature); 
 n_sample_test=test_data_SIZE(1); 
 
-for nT=2:2  %%% grid search for time step 
+for nT=3:3  %%% grid search for time step 
     for nB=4:4 %%% grid search for hidden state choices 
 
         %%% training settings 
