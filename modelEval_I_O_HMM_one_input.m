@@ -1,11 +1,23 @@
 clc 
 clear all
-[train_Y,train_prediction,test_Y,test_prediction] = ModelInfer_I_O_HMM_one_input('I_O_HMM_one_input/I_O_HMM_T3_B4.mat',3,4);
+[train_Y,train_prediction,test_Y,test_prediction,train_input_feature,test_input_feature] = ModelInfer_I_O_HMM_one_input('I_O_HMM_one_input/I_O_HMM_T3_B4.mat',3,4);
 MAE_train=sum(abs(train_Y'-train_prediction))/length(train_prediction)
 MAE_test=sum(abs(test_Y'-test_prediction))/length(test_prediction)
 max_test=max(test_Y)
 min_test=min(test_Y)
 range_test=max_test-min_test
+
+%%%% collect data for model stacking %%%% 
+data=struct(); 
+data.train_Y=train_Y; 
+data.train_prediction=train_prediction'; 
+data.train_input_feature=train_input_feature;
+data.test_Y=test_Y;
+data.test_prediction=test_prediction';
+data.test_input_feature=test_input_feature;
+save("I_O_HMM_one_input/Stack_Data_train_prediction_T3_B4.mat","data")
+
+%%%%
 
 
 %%% add SVR model %%%

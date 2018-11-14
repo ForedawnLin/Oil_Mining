@@ -1,4 +1,4 @@
-function [Y_in_train,train_prediction,Y_in_test,test_prediction,train_input_feature_set,test_input_feature_set] = ModelInfer_I_O_HMM_one_input(modelFile,nT,nB)
+function [Y_in_train,train_prediction,Y_in_test,test_prediction] = ModelInfer_I_O_HMM_one_input(modelFile,nT,nB)
 %UNTITLED4 Summary of this function goes here
 %   Detailed explanation goes here
 %%% modelFile: DBN model file path
@@ -134,7 +134,7 @@ bnet2=FILE.bnet2;
 
 infer_train_Y=cell(1,T); %%% initialize train target val for inference
 infer_train_Y(1,:)=cases{1}(3,:);
-train_input_feature_set=zeros(n_sample_train-T,input_dim); %%% store for model stacking 
+train_feature_set=zeros(n_sample_train-T,input_dim); 
 for i=1:n_sample_train-T
 %%%%%%%%% inference %%%%%%% 
 %%% input data %%%
@@ -148,7 +148,7 @@ for i=1:n_sample_train-T
 
 %%%%%%%% prediction %%%%%%%%% 
     input_feature=train_feature(i+T,:);  %%% 1*m, will be input
-    train_input_feature_set(i,:)=input_feature;
+    train_feature_set(i,:)=input_feature; 
 
     [~,T_th_state]=max(marg.T); %%% choose the T_th state 
     %%% get the corresponding CPD
@@ -186,7 +186,7 @@ infer_test_Y(1,:)=num2cell(Y_test(1:T));
 
 
 
-test_input_feature_set=zeros(n_sample_test-T,input_dim); %%% store for model stacking 
+
 
 for i=1:n_sample_test-T
 %%%%%%%%% inference %%%%%%% 
@@ -201,9 +201,7 @@ for i=1:n_sample_test-T
 
 
     input_feature=test_feature(i+T,:);  %%% 1*m, will be input
-    test_input_feature_set(i,:)=input_feature; 
-    
-    
+
     [~,T_th_state]=max(marg.T); %%% choose the T_th state 
     %%% get the corresponding CPD
     softmax_node_CPD= struct(bnet2.CPD{4});  
