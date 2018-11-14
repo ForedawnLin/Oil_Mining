@@ -28,7 +28,7 @@ if std_test_data==0
     test_feature=test_data(:,train_data.feature_num)-train_data.feature_mean;  %%% get selected features and substract train data mean 
     test_feature=test_feature*train_data.PCs; %%% apply PCA basis 
     test_feature=test_feature/100; 
-else
+elseif std_test_data==1
     
     %%%% get std training data %%%%
     FILE=load('data/train_data_processed_std.mat');
@@ -47,6 +47,24 @@ else
     %%% Apply std and basis (PCA) on test_feature
     test_feature=(test_data(:,train_data.feature_num)-train_data.feature_mean)./train_data.feature_std;  %%% get selected features and std train data mean 
     test_feature=test_feature*train_data.PCs; %%% apply PCA basis
+else 
+        %%%% get std training data %%%%
+    FILE=load('data/train_data_processed_PCA_before_std.mat');
+    train_data=FILE.train_processed;
+    Y_train=train_data.Y;
+    train_feature=train_data.feature;
+
+
+
+    %%% get testing data %%%%
+    FILE2=load('data/test_data.mat');
+    test_data=FILE2.test_data; 
+    Y_test=test_data(:,end);
+
+
+    %%% Apply basis (PCA) and std on test_feature
+    test_feature_PCed=test_data(:,train_data.feature_num)*train_data.PCs; %%% apply PCA basis      
+    test_feature=(test_feature_PCed-train_data.feature_mean)./train_data.feature_std;  %%% get selected features and std train data mean  
 end 
 
 
