@@ -1,12 +1,9 @@
 clc 
 clear all
-<<<<<<< HEAD
+
 [train_Y,train_prediction,test_Y,test_prediction,train_input_feature,test_input_feature] = ModelInfer_I_O_HMM_one_input('I_O_HMM_one_input/I_O_HMM_T3_B4.mat',3,4);
-=======
+%[train_Y,train_prediction,test_Y,test_prediction] = ModelInfer_I_O_HMM_one_input('I_O_HMM_one_input/I_O_HMM_T3_B4_STD.mat',3,4);
 
-
-[train_Y,train_prediction,test_Y,test_prediction] = ModelInfer_I_O_HMM_one_input('I_O_HMM_one_input/I_O_HMM_T3_B4_STD.mat',3,4);
->>>>>>> c8aca353dca8d1ed8479f6efda6aa652dbf27318
 MAE_train=sum(abs(train_Y'-train_prediction))/length(train_prediction)
 MAE_test=sum(abs(test_Y'-test_prediction))/length(test_prediction)
 max_test=max(test_Y)
