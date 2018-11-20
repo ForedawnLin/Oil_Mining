@@ -13,3 +13,5 @@ I_O_HMM_one_input/*.mat
 data/*.mat 
 data/*.csv
 
+cross_validation/k_folder_models/* 
+

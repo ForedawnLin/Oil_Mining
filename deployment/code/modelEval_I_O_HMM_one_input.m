@@ -1,8 +1,7 @@
 clc 
 clear all
 
-%model_path='I_O_HMM_T3_B4.mat'; %%% model file Path 
-model_path='../cross_validation/k_folder_models/final_model.mat';
+model_path='I_O_HMM_T3_B4.mat'; %%% model file Path 
 trainData_path='train_data_processed_std.mat'; %%% train data path 
 testData_path='test_data.mat'; %%% test data path 
 nT=3; %%% look back steps  
@@ -42,6 +41,15 @@ legend('Ground truth','Prediction ')
 
 figure (5)
 plot(train_Y,train_prediction,'bo');
+hold on;
+plot(-1:6,-1:6,'r');
+title('Groud truth v.s predction (train data)'); 
+xlabel('prediction'); 
+ylabel('ground truth'); 
+legend('Ground truth v.s prediction','optimal prediction')
+
+
+
 
 figure (6) 
 plot(test_Y,test_prediction,'bo');

@@ -1,0 +1,80 @@
+%%% this scripts combines cross-validation models 
+%%% Combining method: average 
+
+%%%  load CS models 
+model1=load('k_folder_models/model1.mat');
+model1=model1.model;
+model2=load('k_folder_models/model2.mat');
+model2=model2.model;
+model3=load('k_folder_models/model3.mat');
+model3=model3.model;
+model4=load('k_folder_models/model4.mat');
+model4=model4.model;
+model5=load('k_folder_models/model5.mat');
+model5=model5.model; 
+%%% ends %%%
+
+f_model=struct(model1); %%% initilize final model 
+model_sets=[model2 model3 model4 model5]; 
+
+%%%% get necessary params of each model and add these params up 
+for iter=1:length(model_sets)
+    CPD_2_add=struct(model_sets(iter).CPD{1});
+    f_model.CPD{1}.mean=struct(f_model.CPD{1}).mean+CPD_2_add.mean; 
+    f_model.CPD{1}.cov=struct(f_model.CPD{1}).cov+CPD_2_add.cov; 
+    f_model.CPD{1}.WYsum=struct(f_model.CPD{1}).WYsum+CPD_2_add.WYsum;
+    f_model.CPD{1}.WYYsum=struct(f_model.CPD{1}).WYYsum+CPD_2_add.WYYsum; 
+    
+    
+    CPD_2_add=struct(model_sets(iter).CPD{2});
+    f_model.CPD{2}.glim{1}.w1=struct(f_model.CPD{2}).glim{1}.w1+CPD_2_add.glim{1}.w1; 
+    f_model.CPD{2}.glim{1}.b1=struct(f_model.CPD{2}).glim{1}.b1+CPD_2_add.glim{1}.b1; 
+     
+    
+    CPD_2_add=struct(model_sets(iter).CPD{3});
+    f_model.CPD{3}.mean=struct(f_model.CPD{3}).mean+CPD_2_add.mean; 
+    f_model.CPD{3}.cov=struct(f_model.CPD{3}).cov+CPD_2_add.cov;
+    f_model.CPD{3}.weights=struct(f_model.CPD{3}).weights+CPD_2_add.weights; 
+    f_model.CPD{3}.Wsum=struct(f_model.CPD{3}).Wsum+CPD_2_add.Wsum;
+    f_model.CPD{3}.WYsum=struct(f_model.CPD{3}).WYsum+CPD_2_add.WYsum;
+    f_model.CPD{3}.WXsum=struct(f_model.CPD{3}).WXsum+CPD_2_add.WXsum;
+    f_model.CPD{3}.WYYsum=struct(f_model.CPD{3}).WYYsum+CPD_2_add.WYYsum;
+    f_model.CPD{3}.WXXsum=struct(f_model.CPD{3}).WXXsum+CPD_2_add.WXXsum;
+    f_model.CPD{3}.WXYsum=struct(f_model.CPD{3}).WXYsum+CPD_2_add.WXYsum;
+    
+    for j=1:4 
+        CPD_2_add=struct(model_sets(iter).CPD{4});
+        f_model.CPD{4}.glim{j}.w1=struct(f_model.CPD{4}).glim{j}.w1+CPD_2_add.glim{j}.w1; 
+        f_model.CPD{4}.glim{j}.b1=struct(f_model.CPD{4}).glim{j}.b1+CPD_2_add.glim{j}.b1; 
+    end 
+    
+end 
+
+
+n_models=length(model_sets)+1; 
+
+%%%%% averaging %%%%% 
+f_model.CPD{1}.mean=struct(f_model.CPD{1}).mean/n_models; 
+f_model.CPD{1}.cov=struct(f_model.CPD{1}).cov/n_models; 
+f_model.CPD{1}.WYsum=struct(f_model.CPD{1}).WYsum/n_models;
+f_model.CPD{1}.WYYsum=struct(f_model.CPD{1}).WYYsum/n_models; 
+f_model.CPD{2}.glim{1}.w1=struct(f_model.CPD{2}).glim{1}.w1/n_models; 
+f_model.CPD{2}.glim{1}.b1=struct(f_model.CPD{2}).glim{1}.b1/n_models; 
+
+f_model.CPD{3}.mean=struct(f_model.CPD{3}).mean/n_models; 
+f_model.CPD{3}.cov=struct(f_model.CPD{3}).cov/n_models;
+f_model.CPD{3}.weights=struct(f_model.CPD{3}).weights/n_models; 
+f_model.CPD{3}.Wsum=struct(f_model.CPD{3}).Wsum/n_models;
+f_model.CPD{3}.WYsum=struct(f_model.CPD{3}).WYsum/n_models;
+f_model.CPD{3}.WXsum=struct(f_model.CPD{3}).WXsum/n_models;
+f_model.CPD{3}.WYYsum=struct(f_model.CPD{3}).WYYsum/n_models;
+f_model.CPD{3}.WXXsum=struct(f_model.CPD{3}).WXXsum/n_models;
+f_model.CPD{3}.WXYsum=struct(f_model.CPD{3}).WXYsum/n_models;
+
+for j=1:4 
+    f_model.CPD{4}.glim{j}.w1=struct(f_model.CPD{4}).glim{j}.w1/n_models; 
+    f_model.CPD{4}.glim{j}.b1=struct(f_model.CPD{4}).glim{j}.b1/n_models; 
+end 
+bnet2=f_model; %% make the name consistent with previous codes 
+save('k_folder_models/final_model.mat','bnet2');
+

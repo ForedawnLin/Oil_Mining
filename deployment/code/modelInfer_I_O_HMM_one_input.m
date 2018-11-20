@@ -62,7 +62,6 @@ end
 %%% Load trained model and specifiy algorithm for inference %%%
 FILE=load(modelFile); 
 bnet2=FILE.bnet2;
-%bnet2=FILE.f_model;
 engine=smoother_engine(jtree_2TBN_inf_engine(bnet2)); %%% use junction tree algorithm 
 
 
